@@ -1,0 +1,223 @@
+# TestGPT
+
+> Turn plain English into Selenium Java test code using a self-correcting 3-agent AI pipeline.
+
+![Python](https://img.shields.io/badge/Python-3.9+-blue)
+![Groq](https://img.shields.io/badge/Groq-Llama%203.3%2070B-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+---
+
+## What it does
+
+You describe what you want to test in plain English.  
+TestGPT runs three AI agents in sequence and gives you a reviewed, production-ready Java test file.
+```
+"A user should login to saucedemo.com and add one item to cart"
+                        ↓
+              Agent 1 — Requirement Analyst
+     Extracts actor, steps, credentials, edge cases
+                        ↓
+              Agent 2 — Selenium Engineer
+        Writes complete Java TestNG test class
+                        ↓
+              Agent 3 — Code Reviewer
+     Finds bugs, fixes them, explains every change
+                        ↓
+        StandardUserLoginAndAddToCartTest.java
+```
+
+---
+
+## Demo
+```
+$ python main.py
+
+  TestGPT — AI-powered Selenium test generator
+============================================================
+Enter your requirement:
+> A user should login to saucedemo.com and add one item to cart
+
+Agent 1 — Analysing requirement...
+  Actor     : standard user
+  Action    : login and add to cart
+  Test type : e2e_purchase
+  Steps     : 7 found
+  Edges     : 3 found
+
+Agent 2 — Writing Selenium test...
+  Class     : StandardUserLoginAndAddToCartTest
+
+Agent 3 — Reviewing and fixing code...
+  Issues found  : 2
+  Severity      : medium
+  Summary       : Fixed bare findElement calls and added missing assertion
+
+  Changes made:
+    [1] Selenium best practices
+         Issue : driver.findElement() called without WebDriverWait
+         Fix   : Wrapped in wait.until(ExpectedConditions.elementToBeClickable())
+
+    [2] Test structure
+         Issue : Edge case test had no assertion
+         Fix   : Added assertTrue on confirmation message visibility
+
+Saved: generated_tests/StandardUserLoginAndAddToCartTest.java
+============================================================
+```
+
+---
+
+## Generated output
+
+The saved Java file contains:
+
+- `testMainScenario()` — automates all steps end to end
+- One `@Test` method per edge case
+- `WebDriverWait` for every element interaction — no `Thread.sleep()`
+- `@BeforeMethod` and `@AfterMethod` for setup and teardown
+- Full TestNG assertions with meaningful messages
+- Class-level JavaDoc summarising the test purpose
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Language | Python 3.9+ |
+| AI model | Llama 3.3 70B via Groq API |
+| Agent framework | Custom multi-agent pipeline |
+| Test output | Java + Selenium WebDriver + TestNG |
+
+---
+
+## Setup
+
+### Prerequisites
+- Python 3.9+
+- A free Groq API key — [get one here](https://console.groq.com) (no credit card needed)
+
+### Installation
+
+**1. Clone the repo**
+```bash
+git clone https://github.com/Arijit06/TestGPT.git
+cd TestGPT
+```
+
+**2. Create virtual environment**
+```bash
+python -m venv venv
+source venv/bin/activate
+# Windows: venv\Scripts\activate
+```
+
+**3. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**4. Add your Groq API key**
+```bash
+cp .env.example .env
+# Open .env and add your key
+```
+
+---
+
+## Usage
+
+**Interactive mode — recommended**
+```bash
+python main.py
+```
+
+**Pass requirement directly**
+```bash
+python main.py "A user should login to saucedemo.com and add one item to cart"
+```
+
+**Any website, any scenario**
+```bash
+python main.py "An admin should be able to login to opensource-demo.orangehrmlive.com and add a new employee"
+```
+
+---
+
+## Project structure
+```
+TestGPT/
+├── testgpt/
+│   ├── analyser.py       # Agent 1 — requirement analyst
+│   ├── generator.py      # Agent 2 — Selenium code writer
+│   ├── reviewer.py       # Agent 3 — code reviewer and fixer
+│   └── file_writer.py    # saves generated .java files to disk
+├── generated_tests/      # output folder — your .java files appear here
+├── .env.example          # copy to .env and add your Groq key
+├── requirements.txt
+└── main.py               # entry point
+```
+
+---
+
+## How the 3-agent pipeline works
+
+**Agent 1 — Requirement Analyst**  
+Reads your plain English requirement and extracts a structured specification — actor, action, test steps, credentials, URL, class name, and edge cases. Nothing is hardcoded — it works for any website and any scenario.
+
+**Agent 2 — Selenium Engineer**  
+Receives the structured spec from Agent 1 and writes a complete, runnable Java test class. Uses its own Selenium expertise to infer locators, waits, and assertions. Covers the main scenario and every edge case in one file.
+
+**Agent 3 — Code Reviewer**  
+Reads Agent 2's output and checks it against real Selenium best practices — missing waits, empty test bodies, fragile locators, unused imports, bad assertions. Fixes every issue it finds and returns a structured report explaining each change.
+
+---
+
+## Example requirements you can try
+```
+A locked out user should see an error message when trying to login to saucedemo.com
+
+A user with username visual_user and password secret_sauce should login 
+and add two items to the cart then checkout
+
+An admin should login to opensource-demo.orangehrmlive.com and navigate to the employee list
+
+A user should search for a product on saucedemo.com and verify the results
+```
+
+---
+
+## Running the generated tests
+
+The generated `.java` files are ready to use in any Maven project with Selenium and TestNG dependencies.
+
+Add to your `pom.xml`:
+```xml
+<dependencies>
+  <dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.18.1</version>
+  </dependency>
+  <dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.9.0</version>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
+```
+
+Then run:
+```bash
+mvn test
+```
+
+---
+
+## Author
+
+**Arijit Singha Roy**  
+
+---
