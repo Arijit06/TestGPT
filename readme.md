@@ -13,55 +13,15 @@ TestGPT runs three AI agents in sequence and gives you a reviewed, Java test fil
      Extracts actor, steps, credentials, edge cases
                         ↓
               Agent 2 — Selenium Engineer
-        Writes complete Java TestNG test class
+        Writes complete Java TestNG test class 
                         ↓
               Agent 3 — Code Reviewer
-     Finds bugs, fixes them, explains every change
+     Finds bugs, fixes them, checks code quality and coding standards explains every change 
                         ↓
-        StandardUserLoginAndAddToCartTest.java
+        StandardUserLoginAndAddToCartTest.java (saved under generated_tests)
 ```
 
 ---
-
-## Demo
-```
-$ python main.py
-
-  TestGPT — AI-powered Selenium test generator
-============================================================
-Enter your requirement:
-> A user should login to saucedemo.com and add one item to cart
-
-Agent 1 — Analysing requirement...
-  Actor     : standard user
-  Action    : login and add to cart
-  Test type : e2e_purchase
-  Steps     : 7 found
-  Edges     : 3 found
-
-Agent 2 — Writing Selenium test...
-  Class     : StandardUserLoginAndAddToCartTest
-
-Agent 3 — Reviewing and fixing code...
-  Issues found  : 2
-  Severity      : medium
-  Summary       : Fixed bare findElement calls and added missing assertion
-
-  Changes made:
-    [1] Selenium best practices
-         Issue : driver.findElement() called without WebDriverWait
-         Fix   : Wrapped in wait.until(ExpectedConditions.elementToBeClickable())
-
-    [2] Test structure
-         Issue : Edge case test had no assertion
-         Fix   : Added assertTrue on confirmation message visibility
-
-Saved: generated_tests/StandardUserLoginAndAddToCartTest.java
-============================================================
-```
-
----
-
 ## Generated output
 
 The saved Java file contains:
@@ -124,17 +84,17 @@ cp .env.example .env
 
 **Interactive mode — recommended**
 ```bash
-python main.py
+python3 main.py
 ```
 
 **Pass requirement directly**
 ```bash
-python main.py "A user should login to saucedemo.com and add one item to cart"
+python3 main.py "A user should login to saucedemo.com and add one item to cart"
 ```
 
 **Any website, any scenario**
 ```bash
-python main.py "An admin should be able to login to opensource-demo.orangehrmlive.com and add a new employee"
+python3 main.py "An admin should be able to login to opensource-demo.orangehrmlive.com and add a new employee"
 ```
 
 ---
